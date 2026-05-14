@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">S | A - LOGIN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-image: url('https://images.unsplash.com/photo-1612817159949-f0f963a36c08?auto=format&fit=crop&w=1400&q=80');
+      --bg-color: transparent;
+      --header-bg: rgba(0, 0, 0, 0.8);
+      --nav-bg: rgba(0, 0, 0, 0.6);
+      --main-bg: rgba(0, 0, 0, 0.7); /* شفافية متناسقة */
+      --text-color: #ffffff;
+      --accent-color: #ffcc00;
+      --input-bg: #ffffff;
+      --input-text: #000000;
+      --footer-bg: rgba(0, 0, 0, 0.8);
+    }
+
+    [data-theme="dark"] {
+      --bg-image: none;
+      --bg-color: #000000;
+      --header-bg: #111111;
+      --nav-bg: #1a1a1a;
+      --main-bg: #151515;
+      --text-color: #e0e0e0;
+      --input-bg: #222222;
+      --input-text: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+
+    body {
+      background: var(--bg-image) no-repeat center center fixed;
+      background-size: cover;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header { background: var(--header-bg); padding: 1.5rem; text-align: center; }
+    
+    nav { 
+      background: var(--nav-bg); 
+      display: flex; 
+      justify-content: center; 
+      gap: 2rem; 
+      padding: 10px; 
+    }
+
+    .btn-toggle { 
+      padding: 5px 15px; 
+      cursor: pointer; 
+      border: 1px solid var(--accent-color); 
+      background: transparent; 
+      color: var(--accent-color); 
+      border-radius: 5px; 
+      font-weight: bold; 
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .auth-box {
+      background: var(--main-bg);
+      padding: 2.5rem;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .auth-box h2 { margin-bottom: 1.5rem; color: var(--accent-color); font-size: 2rem; }
+
+    .input-group { margin-bottom: 1.2rem; text-align: initial; }
+    .input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--accent-color); }
+    
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: var(--input-bg);
+      color: var(--input-text);
+      font-size: 1rem;
+    }
+
+    .btn-auth {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent-color);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .switch-text { margin-top: 1.5rem; font-size: 0.95rem; }
+    .switch-btn { color: var(--accent-color); cursor: pointer; text-decoration: underline; font-weight: bold; }
+
+    footer { background: var(--footer-bg); padding: 1.5rem; text-align: center; margin-top: auto; }
+  </style>
+</head>
+<body>
+
+  <header><h1>S | A</h1></header>
+
+  <nav>
+    <button class="btn-toggle" onclick="toggleLanguage()" id="langBtn">EN</button>
+    <button class="btn-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+  </nav>
+
+  <main>
+    <div class="auth-box">
+      <h2 id="authTitle">تسجيل الدخول</h2>
+      
+      <div class="input-group">
+        <label id="labelUser">اسم المستخدم:</label>
+        <input type="text" id="username">
+      </div>
+
+      <div class="input-group">
+        <label id="labelPass">كلمة المرور:</label>
+        <input type="password" id="password">
+      </div>
+
+      <button class="btn-auth" onclick="handleAuth()" id="authBtn">دخول</button>
+      
+      <p class="switch-text">
+        <span id="textNoAccount">ليس لديك حساب؟</span> 
+        <span class="switch-btn" onclick="toggleAuthMode()" id="switchBtn">سجل الآن</span>
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <p id="footerText">© 2025 متجر الكاوتش - جميع الحقوق محفوظة</p>
+  </footer>
+
+  <script>
+    let isLoginMode = true;
+    let currentLang = localStorage.getItem("lang") || 'ar';
+    let currentTheme = localStorage.getItem("theme") || 'light';
+
+    const t = {
+      ar: { login: "تسجيل الدخول", signup: "إنشاء حساب", user: "اسم المستخدم:", pass: "كلمة المرور:", btn_l: "دخول", btn_s: "إنشاء حساب", no: "ليس لديك حساب؟", have: "لديك حساب بالفعل؟", s_s: "سجل الآن", s_l: "سجل دخول", err: "املا البيانات!", footer: "© 2025 متجر الكاوتش" },
+      en: { login: "Login", signup: "Sign Up", user: "Username:", pass: "Password:", btn_l: "Login", btn_s: "Sign Up", no: "No account?", have: "Have account?", s_s: "Register Now", s_l: "Login Here", err: "Fill all fields!", footer: "© 2025 Tire Store" }
+    };
+
+    window.onload = () => {
+      if(localStorage.getItem("currentUser")) window.location.href = "Tire.html";
+      updateUI(); applyTheme();
+    };
+
+    function toggleAuthMode() { isLoginMode = !isLoginMode; updateUI(); }
+    function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem("lang", currentLang); updateUI(); }
+    function toggleTheme() { currentTheme = currentTheme === 'light' ? 'dark' : 'light'; localStorage.setItem("theme", currentTheme); applyTheme(); }
+    function applyTheme() { document.body.setAttribute('data-theme', currentTheme); document.getElementById('themeBtn').textContent = currentTheme === 'light' ? '🌙' : '☀️'; }
+
+    function updateUI() {
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.getElementById('langBtn').textContent = currentLang === 'ar' ? 'EN' : 'AR';
+      const lang = t[currentLang];
+      document.getElementById('authTitle').textContent = isLoginMode ? lang.login : lang.signup;
+      document.getElementById('labelUser').textContent = lang.user;
+      document.getElementById('labelPass').textContent = lang.pass;
+      document.getElementById('authBtn').textContent = isLoginMode ? lang.btn_l : lang.btn_s;
+      document.getElementById('textNoAccount').textContent = isLoginMode ? lang.no : lang.have;
+      document.getElementById('switchBtn').textContent = isLoginMode ? lang.s_s : lang.s_l;
+      document.getElementById('footerText').textContent = lang.footer;
+    }
+
+    function handleAuth() {
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value.trim();
+      if(!u || !p) return alert(t[currentLang].err);
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      if(isLoginMode) {
+        const found = users.find(x => x.username === u && x.password === p);
+        if(found) { localStorage.setItem("currentUser", u); window.location.href = "Tire.html"; }
+        else alert(currentLang === 'ar' ? "بيانات غلط!" : "Wrong data!");
+      } else {
+        if(users.find(x => x.username === u)) return alert("الاسم موجود!");
+        users.push({username: u, password: p});
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("currentUser", u);
+        window.location.href = "Tire.html";
+      }
+    }
+  </script>
+</body>
+</html>
