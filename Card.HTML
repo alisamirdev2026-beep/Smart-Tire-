@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>سلة المشتريات</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    :root {
+      --body-bg: url('https://images.unsplash.com/photo-1612817159949-f0f963a36c08?auto=format&fit=crop&w=1400&q=80');
+      --body-color: transparent;
+      --header-bg: rgba(40, 40, 40, 0.95);
+      --nav-bg: rgba(70, 70, 70, 0.95);
+      --main-bg: rgba(60, 60, 60, 0.92);
+      --footer-bg: rgba(30, 30, 30, 0.97);
+      --text-color: white;
+      --card-bg: #dcdcdc;
+      --card-text: black;
+      --accent: #ffcc00;
+    }
+
+    [data-theme="dark"] {
+      --body-bg: none;
+      --body-color: #000000;
+      --header-bg: #1a1a1a;
+      --nav-bg: #111111;
+      --main-bg: #1e1e1e;
+      --footer-bg: #0a0a0a;
+      --text-color: #e0e0e0;
+      --card-bg: #333333;
+      --card-text: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+      transition: 0.3s;
+    }
+
+    body {
+      background: var(--body-bg) no-repeat center center fixed;
+      background-size: cover;
+      background-color: var(--body-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      width: 100%;
+      background: var(--header-bg);
+      text-align: center;
+      padding: 25px 10px;
+    }
+
+    .logo {
+      font-size: 42px;
+      font-weight: bold;
+      letter-spacing: 8px;
+    }
+
+    nav {
+      width: 100%;
+      background: var(--nav-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      padding: 15px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-inline-start: 20px;
+    }
+
+    .btn-toggle {
+      background: var(--accent);
+      border: none;
+      color: black;
+      padding: 5px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 850px;
+      background: var(--main-bg);
+      padding: 35px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .cart-item {
+      background: var(--card-bg);
+      color: var(--card-text);
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-item button {
+      background: #ff4d4d;
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cart-summary {
+      margin-top: 30px;
+      background: var(--card-bg);
+      color: var(--card-text);
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    #checkoutBtn {
+      margin-top: 15px;
+      padding: 12px 30px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    footer {
+      background: var(--footer-bg);
+      text-align: center;
+      padding: 25px 10px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+    }
+
+    .footer-links a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Modal */
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 550px;
+      background: var(--main-bg);
+      color: var(--text-color);
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      animation: popup 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes popup {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      color: #ff4d4d;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 25px;
+    }
+
+    .modal-content form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .modal-content input,
+    .modal-content select {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .payment-details {
+      display: none;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    #confirm-order {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #confirm-order:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+
+    #modal-cart-items {
+      margin-bottom: 20px;
+    }
+
+    .modal-item {
+      background: var(--card-bg);
+      color: var(--card-text);
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .success-message {
+      margin-top: 20px;
+      background: #28a745;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">S | A</div>
+  </header>
+
+  <nav>
+
+    <a href="Tire.html" id="homeText">الرئيسية</a>
+
+    <a href="Product.html" id="productsText">المنتجات</a>
+
+    <a href="Contact.html" id="contactText">اتصل بنا</a>
+
+    <div class="controls">
+
+      <button class="btn-toggle" onclick="toggleLanguage()" id="langBtn">
+        EN
+      </button>
+
+      <button class="btn-toggle" onclick="toggleTheme()" id="themeBtn">
+        🌙
+      </button>
+
+    </div>
+
+  </nav>
+
+  <div class="container">
+
+    <main>
+
+      <h2 id="cartTitle">العناصر في السلة</h2>
+
+      <ul class="cart-items" id="cartItems"></ul>
+
+      <div id="emptyCartMsg" style="display:none; margin:20px 0;">
+        السلة فارغة حالياً
+      </div>
+
+      <div class="cart-summary" id="cartSummary">
+
+        <h3 id="summaryTitle">الملخص</h3>
+
+        <p>
+          <span id="itemsText">عدد العناصر:</span>
+          <span id="itemCount">0</span>
+        </p>
+
+        <p class="total">
+          <span id="totalText">المجموع:</span>
+          <span id="totalAmount">0</span>
+          <span id="currencyText">جنيه</span>
+        </p>
+
+        <button id="checkoutBtn" onclick="checkout()">
+          إتمام الطلب
+        </button>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <footer>
+
+    <p id="footerText">
+      © 2025 متجر الكاوتش - جميع الحقوق محفوظة
+    </p>
+
+    <div class="footer-links">
+
+      <a href="tel:01021885140" id="callText">
+        📞 اتصال
+      </a>
+
+      <a href="mailto:salaheldin200281@gmail.com" id="mailText">
+        📧 بريد
+      </a>
+
+    </div>
+
+  </footer>
+
+  <!-- Modal -->
+
+  <div id="order-modal" class="modal">
+
+    <div class="modal-content">
+
+      <span id="closeModal" class="close">&times;</span>
+
+      <h2 id="modalTitle">🛍️ طلب المنتجات</h2>
+
+      <div id="modal-cart-items"></div>
+
+      <p id="modal-total"></p>
+
+      <form id="order-form">
+
+        <label id="nameLabel">الاسم الكامل</label>
+        <input type="text" id="customer-name" required>
+
+        <label id="phoneLabel">رقم الهاتف</label>
+        <input type="text" id="customer-phone" required>
+
+        <label id="addressLabel">العنوان</label>
+        <input type="text" id="customer-address" required>
+
+        <label id="paymentLabel">طريقة الدفع</label>
+
+        <select id="payment-method" required onchange="showPaymentDetails()">
+
+          <option value="">اختر طريقة الدفع</option>
+
+          <option value="cash">كاش عند الاستلام</option>
+
+          <option value="wallet">محفظة إلكترونية</option>
+
+          <option value="instapay">إنستا باي</option>
+
+        </select>
+
+        <!-- Cash -->
+
+        <div id="cash-details" class="payment-details">
+
+          <p>سيتم الدفع عند الاستلام.</p>
+
+        </div>
+
+        <!-- Wallet -->
+
+        <div id="wallet-details" class="payment-details">
+
+          <p>رقم المحفظة:</p>
+
+          <p><strong>01036524821</strong></p>
+
+          <label>رفع إثبات الدفع</label>
+
+          <input type="file" id="payment-proof-wallet">
+
+        </div>
+
+        <!-- Instapay -->
+
+        <div id="instapay-details" class="payment-details">
+
+          <p>
+            <a href="https://www.instapay.com" target="_blank">
+              رابط الدفع عبر إنستا باي
+            </a>
+          </p>
+
+          <label>رفع إثبات الدفع</label>
+
+          <input type="file" id="payment-proof-insta">
+
+        </div>
+
+        <button type="submit" id="confirm-order" disabled>
+          تأكيد الطلب
+        </button>
+
+      </form>
+
+      <div id="successMessage" class="success-message">
+        ✅ تم إرسال الطلب بنجاح
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    if (!localStorage.getItem("currentUser")) {
+      window.location.href = "login.html";
+    }
+
+    let currentLang = localStorage.getItem("lang") || 'ar';
+
+    let currentTheme = localStorage.getItem("theme") || 'light';
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function toggleLanguage() {
+
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+
+      localStorage.setItem("lang", currentLang);
+
+      document.documentElement.lang = currentLang;
+
+      document.documentElement.dir =
+        currentLang === 'ar' ? 'rtl' : 'ltr';
+
+      document.getElementById("langBtn").textContent =
+        currentLang === 'ar' ? 'EN' : 'AR';
+
+      if (currentLang === 'en') {
+
+        document.title = "Shopping Cart";
+
+        homeText.textContent = "Home";
+        productsText.textContent = "Products";
+        contactText.textContent = "Contact";
+
+        cartTitle.textContent = "Items In Cart";
+        summaryTitle.textContent = "Summary";
+
+        itemsText.textContent = "Items:";
+        totalText.textContent = "Total:";
+        currencyText.textContent = "EGP";
+
+        checkoutBtn.textContent = "Checkout";
+
+        emptyCartMsg.textContent = "Cart is Empty";
+
+        footerText.textContent =
+          "© 2025 Tire Store - All Rights Reserved";
+
+        callText.textContent = "📞 Call";
+        mailText.textContent = "📧 Email";
+
+        modalTitle.textContent = "🛍️ Order Products";
+
+        nameLabel.textContent = "Full Name";
+        phoneLabel.textContent = "Phone Number";
+        addressLabel.textContent = "Address";
+        paymentLabel.textContent = "Payment Method";
+
+        document.getElementById("confirm-order").textContent =
+          "Confirm Order";
+
+      } else {
+
+        document.title = "سلة المشتريات";
+
+        homeText.textContent = "الرئيسية";
+        productsText.textContent = "المنتجات";
+        contactText.textContent = "اتصل بنا";
+
+        cartTitle.textContent = "العناصر في السلة";
+        summaryTitle.textContent = "الملخص";
+
+        itemsText.textContent = "عدد العناصر:";
+        totalText.textContent = "المجموع:";
+        currencyText.textContent = "جنيه";
+
+        checkoutBtn.textContent = "إتمام الطلب";
+
+        emptyCartMsg.textContent = "السلة فارغة حالياً";
+
+        footerText.textContent =
+          "© 2025 متجر الكاوتش - جميع الحقوق محفوظة";
+
+        callText.textContent = "📞 اتصال";
+        mailText.textContent = "📧 بريد";
+
+        modalTitle.textContent = "🛍️ طلب المنتجات";
+
+        nameLabel.textContent = "الاسم الكامل";
+        phoneLabel.textContent = "رقم الهاتف";
+        addressLabel.textContent = "العنوان";
+        paymentLabel.textContent = "طريقة الدفع";
+
+        document.getElementById("confirm-order").textContent =
+          "تأكيد الطلب";
+      }
+
+      updateCartDisplay();
+    }
+
+    function toggleTheme() {
+
+      currentTheme =
+        currentTheme === 'light' ? 'dark' : 'light';
+
+      localStorage.setItem("theme", currentTheme);
+
+      applyTheme();
+    }
+
+    function applyTheme() {
+
+      document.body.setAttribute('data-theme', currentTheme);
+
+      document.getElementById('themeBtn').textContent =
+        currentTheme === 'light' ? '🌙' : '☀️';
+    }
+
+    function updateCartDisplay() {
+
+      const cartItemsDiv =
+        document.getElementById('cartItems');
+
+      const itemCountDiv =
+        document.getElementById('itemCount');
+
+      const totalAmountDiv =
+        document.getElementById('totalAmount');
+
+      const emptyMsg =
+        document.getElementById('emptyCartMsg');
+
+      const summaryDiv =
+        document.getElementById('cartSummary');
+
+      cartItemsDiv.innerHTML = '';
+
+      if (cart.length === 0) {
+
+        emptyMsg.style.display = 'block';
+
+        summaryDiv.style.display = 'none';
+
+        itemCountDiv.textContent = '0';
+
+        totalAmountDiv.textContent = '0';
+
+        return;
+      }
+
+      emptyMsg.style.display = 'none';
+
+      summaryDiv.style.display = 'block';
+
+      let total = 0;
+
+      let count = 0;
+
+      cart.forEach((item, index) => {
+
+        const li = document.createElement('li');
+
+        li.className = 'cart-item';
+
+        li.innerHTML = `
+          <span>
+            ${item.name} - ${item.price}
+            ${currentLang === 'ar' ? 'جنيه' : 'EGP'}
+          </span>
+
+          <button onclick="removeItem(${index})">
+            ${currentLang === 'ar' ? 'إزالة' : 'Remove'}
+          </button>
+        `;
+
+        cartItemsDiv.appendChild(li);
+
+        total += item.price;
+
+        count++;
+      });
+
+      itemCountDiv.textContent = count;
+
+      totalAmountDiv.textContent = total;
+    }
+
+    function removeItem(index) {
+
+      cart.splice(index, 1);
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      updateCartDisplay();
+    }
+
+    function checkout() {
+
+      if (cart.length === 0) return;
+
+      const modal =
+        document.getElementById("order-modal");
+
+      const modalItems =
+        document.getElementById("modal-cart-items");
+
+      const modalTotal =
+        document.getElementById("modal-total");
+
+      modalItems.innerHTML = "";
+
+      let total = 0;
+
+      cart.forEach(item => {
+
+        total += item.price;
+
+        modalItems.innerHTML += `
+          <div class="modal-item">
+            ${item.name} - ${item.price}
+            ${currentLang === 'ar' ? 'جنيه' : 'EGP'}
+          </div>
+        `;
+      });
+
+      modalTotal.innerHTML =
+        `<strong>
+          ${currentLang === 'ar' ? 'الإجمالي' : 'Total'}:
+          ${total}
+          ${currentLang === 'ar' ? 'جنيه' : 'EGP'}
+        </strong>`;
+
+      modal.style.display = "flex";
+    }
+
+    document.getElementById("closeModal").onclick = () => {
+
+      document.getElementById("order-modal").style.display =
+        "none";
+    };
+
+    window.onclick = function (e) {
+
+      const modal =
+        document.getElementById("order-modal");
+
+      if (e.target === modal) {
+
+        modal.style.display = "none";
+      }
+    };
+
+    function showPaymentDetails() {
+
+      const method =
+        document.getElementById("payment-method").value;
+
+      const sections =
+        document.querySelectorAll(".payment-details");
+
+      sections.forEach(sec => sec.style.display = "none");
+
+      if (method === "cash") {
+        document.getElementById("cash-details").style.display =
+          "block";
+      }
+
+      if (method === "wallet") {
+        document.getElementById("wallet-details").style.display =
+          "block";
+      }
+
+      if (method === "instapay") {
+        document.getElementById("instapay-details").style.display =
+          "block";
+      }
+
+      validateForm();
+    }
+
+    const formInputs =
+      document.querySelectorAll(
+        "#order-form input, #order-form select"
+      );
+
+    formInputs.forEach(input => {
+
+      input.addEventListener("input", validateForm);
+
+      input.addEventListener("change", validateForm);
+    });
+
+    function validateForm() {
+
+      const name =
+        document.getElementById("customer-name")
+          .value.trim();
+
+      const phone =
+        document.getElementById("customer-phone")
+          .value.trim();
+
+      const address =
+        document.getElementById("customer-address")
+          .value.trim();
+
+      const payment =
+        document.getElementById("payment-method")
+          .value;
+
+      const confirmBtn =
+        document.getElementById("confirm-order");
+
+      let valid =
+        name && phone && address && payment;
+
+      if (payment === "wallet") {
+
+        valid = valid &&
+          document.getElementById("payment-proof-wallet")
+            .files.length > 0;
+      }
+
+      if (payment === "instapay") {
+
+        valid = valid &&
+          document.getElementById("payment-proof-insta")
+            .files.length > 0;
+      }
+
+      confirmBtn.disabled = !valid;
+    }
+
+    document.getElementById("order-form")
+      .addEventListener("submit", function (e) {
+
+        e.preventDefault();
+
+        document.getElementById("successMessage")
+          .style.display = "block";
+
+        localStorage.removeItem("cart");
+
+        cart = [];
+
+        updateCartDisplay();
+
+        setTimeout(() => {
+
+          document.getElementById("order-modal")
+            .style.display = "none";
+
+          document.getElementById("successMessage")
+            .style.display = "none";
+
+          document.getElementById("order-form").reset();
+
+        }, 2500);
+
+      });
+
+    applyTheme();
+
+    toggleLanguage();
+
+    toggleLanguage();
+
+    updateCartDisplay();
+
+  </script>
+
+</body>
+
+</html>

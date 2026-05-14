@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">S | A</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-image: url('https://images.unsplash.com/photo-1612817159949-f0f963a36c08?auto=format&fit=crop&w=1400&q=80');
+      --bg-color: transparent;
+      --header-bg: rgba(0, 0, 0, 0.8);
+      --nav-bg: rgba(0, 0, 0, 0.6);
+      --main-bg: rgba(0, 0, 0, 0.6);
+      --text-color: #ffffff;
+      --accent-color: #ffcc00;
+      --results-bg: #ffffff;
+      --results-text: #000000;
+      --footer-bg: rgba(0, 0, 0, 0.8);
+    }
+
+    [data-theme="dark"] {
+      --bg-image: none;
+      --bg-color: #000000;
+      --header-bg: #111111;
+      --nav-bg: #1a1a1a;
+      --main-bg: #151515;
+      --text-color: #e0e0e0;
+      --results-bg: #222222;
+      --results-text: #ffffff;
+      --footer-bg: #0a0a0a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: background 0.3s, color 0.3s; }
+
+    body {
+      background: var(--bg-image) no-repeat center center fixed;
+      background-size: cover;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    header { background: var(--header-bg); padding: 1.5rem; text-align: center; }
+
+    nav {
+      background: var(--nav-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+
+    nav a { color: var(--text-color); text-decoration: none; font-weight: bold; }
+    nav a:hover { color: var(--accent-color); }
+
+    .controls { display: flex; align-items: center; gap: 10px; margin-inline-start: 20px; }
+
+    .btn-toggle {
+      padding: 5px 12px;
+      cursor: pointer;
+      border: 1px solid var(--accent-color);
+      background: transparent;
+      color: var(--accent-color);
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    /* تنسيق أيقونة الحساب الجديدة */
+    .user-profile { position: relative; cursor: pointer; }
+    .user-icon { background: var(--accent-color); color: #000; padding: 5px 10px; border-radius: 50%; font-weight: bold; font-size: 1.2rem; }
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: 120%;
+      left: 0;
+      background: var(--nav-bg);
+      min-width: 160px;
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid var(--accent-color);
+      z-index: 1000;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+    .user-profile:hover .user-dropdown { display: block; }
+    .logout-btn { background: #ff4d4d; color: white; border: none; padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+
+    main { padding: 2rem; background-color: var(--main-bg); margin: 2rem auto; max-width: 900px; border-radius: 10px; text-align: center; } 
+
+    .input-section { margin: 2rem 0; padding: 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; }
+
+    select, button#searchBtn { padding: 0.7rem 1rem; font-size: 1rem; margin-top: 0.5rem; border-radius: 6px; border: none; }
+    select { width: 250px; }
+    button#searchBtn { background-color: var(--accent-color); color: #000; cursor: pointer; font-weight: bold; }
+
+    .results { margin-top: 1rem; background: var(--results-bg); color: var(--results-text); padding: 1rem; border-radius: 8px; text-align: right; }
+    [dir="ltr"] .results { text-align: left; }
+
+    ul { list-style: none; padding: 0; }
+    li { margin: 10px 0; }
+
+    footer { background: var(--footer-bg); text-align: center; padding: 1.5rem; margin-top: 2rem; }
+    .footer-links a { margin: 0 10px; color: var(--accent-color); text-decoration: none; }
+
+    @media (max-width: 600px) { nav { flex-direction: column; gap: 1rem; } }
+  </style>
+</head>
+<body>
+
+  <header><h1>S | A</h1></header>
+
+  <nav>
+    <a href="Tire.html" data-key="nav_home">الرئيسية</a>
+    <a href="Product.html" data-key="nav_products">المنتجات</a>
+    <a href="Contact.html" data-key="nav_contact">اتصل بنا</a>
+    
+    <div class="controls">
+      <button class="btn-toggle" onclick="toggleLanguage()" id="langBtn">EN</button>
+      <button class="btn-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      
+      <!-- أيقونة الحساب المضافة -->
+      <div class="user-profile">
+        <span class="user-icon">👤</span>
+        <div class="user-dropdown">
+          <p><span data-key="hi">مرحباً</span>، <span id="currentLoggedUser"></span></p>
+          <button class="logout-btn" onclick="logout()" data-key="logout_btn">تسجيل الخروج</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section">
+      <h2 data-key="welcome_title">أهلاً بيك</h2>
+      <p data-key="welcome_desc">أفضل أنواع الكاوتش بجميع المقاسات المناسبة لعربيتك.</p>
+    </section>
+
+    <section class="input-section">
+      <label for="carType" data-key="select_label">اختر نوع عربيتك:</label><br>
+      <select id="carType">
+        <option value="" data-key="select_placeholder">-- اختار نوع العربية --</option>
+        <option value="تويوتا كورولا">تويوتا كورولا</option>
+        <option value="هيونداي فيرنا">هيونداي فيرنا</option>
+        <option value="نيسان صني">نيسان صني</option>
+        <option value="سكودا اوكتافيا">سكودا اوكتافيا</option>
+        <option value="كيا سبورتاج">كيا سبورتاج</option>
+        <option value="مرسيدس">مرسيدس</option>
+        <option value="بي ام">بي ام</option>
+        <option value="جيب">جيب</option>
+        <option value="شيفروليه">شيفروليه</option>
+      </select>
+      <button id="searchBtn" data-key="search_btn">اعرض الأنواع المناسبة</button>
+      <div class="results" id="results" style="display:none;"></div>
+    </section>
+
+    <section class="section">
+      <h2 data-key="products_title">المنتجات</h2>
+      <p data-key="products_desc">أنواع الكاوتش المتوفرة:</p>
+      <ul id="productsList"></ul>
+    </section>
+
+    <section class="section">
+      <h2 data-key="contact_title">اتصل بنا</h2>
+      <p>Mobill Phone: 01021885140</p>
+      <p>Email: salaheldin200281@gmail.com</p>
+    </section>
+  </main>
+
+  <footer>
+    <p data-key="footer_rights">&copy; 2025 متجر الكاوتش. جميع الحقوق محفوظة.</p>
+    <div class="footer-links">
+      <a href="tel:01021885140" data-key="footer_call">📞 اتصال</a>
+      <a href="mailto:salaheldin200281@gmail.com" data-key="footer_mail">📧 بريد</a>
+      <a href="#" data-key="footer_loc">📍 موقعنا</a>
+    </div>
+  </footer>
+
+  <script>
+    // 1. نظام الحماية (يجب أن يكون في البداية)
+    if (!localStorage.getItem("currentUser")) {
+        window.location.href = "Login.html"; 
+    }
+    document.getElementById("currentLoggedUser").textContent = localStorage.getItem("currentUser");
+
+    function logout() {
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "index.html";
+    }
+
+    // بياناتك الأصلية للترجمة والبحث
+    const translations = {
+      ar: {
+        nav_home: "الرئيسية", nav_products: "المنتجات", nav_contact: "اتصل بنا", nav_cart: "السلة",
+        welcome_title: "أهلاً بيك", welcome_desc: "أفضل أنواع الكاوتش بجميع المقاسات المناسبة لعربيتك.",
+        select_label: "اختر نوع عربيتك:", select_placeholder: "-- اختار نوع العربية --",
+        search_btn: "اعرض الأنواع المناسبة", products_title: "المنتجات",
+        products_desc: "أنواع الكاوتش المتوفرة:", contact_title: "اتصل بنا",
+        footer_rights: "© 2025 متجر الكاوتش. جميع الحقوق محفوظة.", footer_call: "📞 اتصال",
+        footer_mail: "📧 بريد", footer_loc: "📍 موقعنا", results_found: "المقاسات المناسبة:",
+        no_results: "لم يتم العثور على نتائج.", hi: "مرحباً", logout_btn: "تسجيل الخروج",
+        items: [
+          "<strong>كاوتش صيفي:</strong> أداء ممتاز على الطرق الجافة والمبللة.",
+          "<strong>كاوتش شتوي:</strong> تماسك عالي على الثلج والجليد.",
+          "<strong>كاوتش جميع الفصول:</strong> مناسب لكل الأجواء.",
+          "<strong>كاوتش Run-Flat:</strong> بيمشي حتى بعد الفرقعة.",
+          "<strong>كاوتش SUV و4x4:</strong> للطرق الوعرة والرملية."
+        ]
+      },
+      en: {
+        nav_home: "Home", nav_products: "Products", nav_contact: "Contact", nav_cart: "Cart",
+        welcome_title: "Welcome", welcome_desc: "Best tires for your car size.",
+        select_label: "Select your car type:", select_placeholder: "-- Choose car --",
+        search_btn: "Show Sizes", products_title: "Products",
+        products_desc: "Available tire types:", contact_title: "Contact Us",
+        footer_rights: "© 2025 Tire Store. All Rights Reserved.", footer_call: "📞 Call",
+        footer_mail: "📧 Mail", footer_loc: "📍 Location", results_found: "Suitable Sizes:",
+        no_results: "No results found.", hi: "Hi", logout_btn: "Logout",
+        items: [
+          "<strong>Summer Tires:</strong> Excellent on dry roads.",
+          "<strong>Winter Tires:</strong> High grip on snow.",
+          "<strong>All-Season Tires:</strong> Suitable for all weather.",
+          "<strong>Run-Flat Tires:</strong> Keeps going after puncture.",
+          "<strong>SUV & 4x4 Tires:</strong> For off-road."
+        ]
+      }
+    };
+
+    const tireDatabase = {
+      'تويوتا كورولا': ['195/65 R15', '205/55 R16'],
+      'هيونداي فيرنا': ['175/70 R13', '185/60 R14'],
+      'نيسان صني': ['185/65 R15', '195/60 R15'],
+      'سكودا اوكتافيا': ['205/55 R16', '225/45 R17'],
+      'كيا سبورتاج': ['215/60 R16', '225/60 R17'],
+      'مرسيدس': ['225/45 R17', '245/45 R18'],
+      'بي ام': ['225/50 R17', '245/40 R18'],
+      'جيب': ['255/70 R16', '265/65 R17'],
+      'شيفروليه': ['195/60 R15', '205/60 R16']
+    };
+
+    let currentLang = localStorage.getItem("lang") || 'ar';
+    let currentTheme = localStorage.getItem("theme") || 'light';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      localStorage.setItem("lang", currentLang);
+      updateUI();
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem("theme", currentTheme);
+      applyTheme();
+    }
+
+    function applyTheme() {
+      document.body.setAttribute('data-theme', currentTheme);
+      document.getElementById('themeBtn').textContent = currentTheme === 'light' ? '🌙' : '☀️';
+    }
+
+    function updateUI() {
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.getElementById('langBtn').textContent = currentLang === 'ar' ? 'EN' : 'AR';
+      
+      document.querySelectorAll('[data-key]').forEach(elem => {
+        const key = elem.getAttribute('data-key');
+        elem.innerHTML = translations[currentLang][key];
+      });
+
+      const list = document.getElementById('productsList');
+      list.innerHTML = translations[currentLang].items.map(item => `<li>${item}</li>`).join('');
+      document.getElementById('results').style.display = 'none';
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', function () {
+      const car = document.getElementById('carType').value;
+      const resultsDiv = document.getElementById('results');
+      const matches = tireDatabase[car];
+
+      resultsDiv.style.display = 'block';
+      if (matches) {
+        resultsDiv.innerHTML = `<h3>${translations[currentLang].results_found}</h3><ul>` +
+          matches.map(m => `<li>${m}</li>`).join('') + '</ul>';
+      } else {
+        resultsDiv.innerHTML = `<p>${translations[currentLang].no_results}</p>`;
+      }
+    });
+
+    updateUI(); applyTheme();
+  </script>
+</body>
+</html>

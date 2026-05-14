@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">المنتجات | S | A</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --body-bg: url('https://images.unsplash.com/photo-1612817159949-f0f963a36c08?auto=format&fit=crop&w=1400&q=80');
+      --body-color: transparent;
+      --header-bg: rgba(0, 0, 0, 0.8);
+      --nav-bg: rgba(0, 0, 0, 0.6);
+      --main-bg: rgba(60, 60, 60, 0.95);
+      --card-bg: #ffffff;
+      --card-text: #000000;
+      --text-color: #ffffff;
+      --accent-color: #ffcc00;
+      --footer-bg: rgba(0, 0, 0, 0.9);
+    }
+
+    [data-theme="dark"] {
+      --body-bg: none;
+      --body-color: #000000;
+      --header-bg: #111111;
+      --nav-bg: #1a1a1a;
+      --main-bg: #1e1e1e;
+      --card-bg: #2a2a2a;
+      --card-text: #ffffff;
+      --text-color: #e0e0e0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: 0.3s ease; }
+
+    body {
+      background: var(--body-bg) no-repeat center center fixed;
+      background-size: cover;
+      background-color: var(--body-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    header { background: var(--header-bg); padding: 1.5rem; text-align: center; }
+    
+    nav { 
+      background: var(--nav-bg); 
+      display: flex; justify-content: center; align-items: center; 
+      gap: 2.5rem; padding: 1rem; flex-wrap: wrap; 
+    }
+
+    nav a { color: var(--text-color); text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+    nav a:hover { color: var(--accent-color); transform: scale(1.1); }
+
+    .controls { display: flex; align-items: center; gap: 10px; margin-inline-start: 20px; }
+    .btn-toggle { padding: 6px 15px; cursor: pointer; border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); border-radius: 5px; font-weight: bold; }
+
+    /* أيقونة الحساب */
+    .user-profile { position: relative; cursor: pointer; }
+    .user-icon { background: var(--accent-color); color: #000; padding: 5px 12px; border-radius: 50%; font-weight: bold; font-size: 1.2rem; }
+    .user-dropdown {
+      display: none; position: absolute; top: 120%; left: 0; background: var(--nav-bg); min-width: 160px;
+      border-radius: 8px; padding: 15px; border: 1px solid var(--accent-color); z-index: 1000; box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+    .user-profile:hover .user-dropdown { display: block; }
+    .logout-btn { background: #ff4d4d; color: white; border: none; padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+
+    main {
+      padding: 3rem 2rem; background-color: var(--main-bg); margin: 2rem auto;
+      border-radius: 20px; width: 98%; max-width: 1600px; flex: 1; text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    }
+
+    h2 { font-size: 2.5rem; margin-bottom: 2.5rem; border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 10px; }
+
+    /* شبكة الـ 5 أعمدة */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+
+    .product-card {
+      background: var(--card-bg); color: var(--card-text); padding: 15px;
+      border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .product-card:hover { transform: translateY(-10px); }
+
+    .product-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
+    .price-tag { font-weight: bold; color: #28a745; font-size: 1.2rem; margin-bottom: 12px; }
+    
+    .add-btn {
+      width: 100%; padding: 12px; background: var(--accent-color);
+      border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000;
+    }
+
+    .view-cart-btn { background: #00c853; color: white; padding: 18px 60px; border: none; border-radius: 12px; font-size: 1.4rem; font-weight: bold; cursor: pointer; }
+
+    footer { background: var(--footer-bg); padding: 2rem; text-align: center; }
+
+    @media (max-width: 1400px) { .products-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 800px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .products-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header><h1>S | A</h1></header>
+
+  <nav>
+    <a href="Tire.html" data-key="nav_home">الرئيسية</a>
+    <a href="Product.html" data-key="nav_products">المنتجات</a>
+    <a href="Contact.html" data-key="nav_contact">اتصل بنا</a>
+    <div class="controls">
+      <button class="btn-toggle" onclick="toggleLanguage()" id="langBtn">EN</button>
+      <button class="btn-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <div class="user-profile">
+        <span class="user-icon">👤</span>
+        <div class="user-dropdown">
+          <p><span data-key="hi">مرحباً</span>، <span id="currentLoggedUser"></span></p>
+          <button class="logout-btn" onclick="logout()" data-key="logout_btn">تسجيل الخروج</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <h2 data-key="section_title">أنواع الكاوتش</h2>
+
+    <div class="products-grid">
+      <!-- كارت 1 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400" alt="Tire">
+        <h3 data-key="p1">كاوتش صيفي A1</h3>
+        <p class="price-tag">1200 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('Summer Tire A1', 1200)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 2 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400" alt="Tire">
+        <h3 data-key="p2">كاوتش شتوي B2</h3>
+        <p class="price-tag">1350 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('Winter Tire B2', 1350)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 3 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=400" alt="Tire">
+        <h3 data-key="p3">كاوتش SUV X1</h3>
+        <p class="price-tag">1800 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('SUV Tire X1', 1800)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 4 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400" alt="Tire">
+        <h3 data-key="p4">كاوتش جميع الفصول</h3>
+        <p class="price-tag">1450 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('All Seasons', 1450)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 5 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1616432043562-3671ea2e5242?w=400" alt="Tire">
+        <h3 data-key="p5">كاوتش جبلي 4x4</h3>
+        <p class="price-tag">2500 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('4x4 Tire', 2500)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 6 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1551522435-a13afa10f103?w=400" alt="Tire">
+        <h3 data-key="p6">كاوتش ميشلان</h3>
+        <p class="price-tag">3500 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('Michelin', 3500)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 7 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=400" alt="Tire">
+        <h3 data-key="p7">كاوتش بيريللي</h3>
+        <p class="price-tag">3200 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('Pirelli', 3200)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 8 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1551522435-a13afa10f103?w=400" alt="Tire">
+        <h3 data-key="p8">بريدجستون سبورت</h3>
+        <p class="price-tag">3800 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('Bridgestone', 3800)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 9 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400" alt="Tire">
+        <h3 data-key="p9">كاوتش هانكوك</h3>
+        <p class="price-tag">1900 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('Hankook', 1900)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 10 -->
+      <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=400" alt="Tire">
+        <h3 data-key="p10">كاوتش دنلوب</h3>
+        <p class="price-tag">2100 <span data-key="curr">جنيه</span></p>
+        <button class="add-btn" onclick="addToCart('Dunlop', 2100)" data-key="add">+ أضف</button>
+      </div>
+      <!-- كارت 11 حتى 20 (صور متنوعة ومستقرة) -->
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=400"><h3 data-key="p11">كاوتش رياضي</h3><p class="price-tag">2200 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Sport', 2200)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=400"><h3 data-key="p12">كاوتش كوبر</h3><p class="price-tag">2400 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Cooper', 2400)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400"><h3 data-key="p13">كاوتش جوديير</h3><p class="price-tag">2900 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Goodyear', 2900)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=400"><h3 data-key="p14">كاوتش تايواني</h3><p class="price-tag">1600 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Taiwan', 1600)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1616432043562-3671ea2e5242?w=400"><h3 data-key="p15">كاوتش كوري</h3><p class="price-tag">1800 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Korean', 1800)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=400"><h3 data-key="p16">كاوتش نكسن</h3><p class="price-tag">1500 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Nexen', 1500)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=400"><h3 data-key="p17">كاوتش كومهو</h3><p class="price-tag">1400 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Kumho', 1400)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=400"><h3 data-key="p18">كاوتش تويو</h3><p class="price-tag">1850 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Toyo', 1850)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400"><h3 data-key="p19">كاوتش كونتيننتال</h3><p class="price-tag">3300 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Continental', 3300)" data-key="add">+ أضف</button></div>
+      <div class="product-card"><img src="https://images.unsplash.com/photo-1551522435-a13afa10f103?w=400"><h3 data-key="p20">كاوتش يوكوهاما</h3><p class="price-tag">2200 <span data-key="curr">جنيه</span></p><button class="add-btn" onclick="addToCart('Yokohama', 2200)" data-key="add">+ أضف</button></div>
+    </div>
+
+    <div style="margin-top:40px; border-top:1px solid #444; padding-top:30px;">
+        <button class="view-cart-btn" onclick="location.href='Card.html'" data-key="btn_view_cart">🛒 عرض السلة</button>
+    </div>
+  </main>
+
+  <footer>
+    <p data-key="footer_rights">© 2025 متجر الكاوتش - جميع الحقوق محفوظة</p>
+  </footer>
+
+  <script>
+    // الحماية
+    if (!localStorage.getItem("currentUser")) {
+        window.location.replace("index.html"); 
+    }
+    document.getElementById("currentLoggedUser").textContent = localStorage.getItem("currentUser");
+
+    function logout() {
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("isLoggedIn");
+        window.location.replace("index.html");
+    }
+
+    // الترجمة
+    const translations = {
+      ar: {
+        nav_home: "الرئيسية", nav_products: "المنتجات", nav_contact: "اتصل بنا",
+        section_title: "أنواع الكاوتش", btn_view_cart: "عرض السلة 🛒", add: "+ أضف",
+        curr: "جنيه", footer_rights: "© 2025 متجر الكاوتش - جميع الحقوق محفوظة",
+        hi: "مرحباً", logout_btn: "تسجيل الخروج",
+        p1: "كاوتش صيفي A1", p2: "كاوتش شتوي B2", p3: "كاوتش SUV X1", p4: "كاوتش جميع الفصول", p5: "كاوتش جبلي 4x4",
+        p6: "كاوتش ميشلان", p7: "كاوتش بيريللي", p8: "بريدجستون سبورت", p9: "كاوتش هانكوك", p10: "كاوتش دنلوب",
+        p11: "كاوتش رياضي", p12: "كاوتش كوبر", p13: "كاوتش جوديير", p14: "كاوتش تايواني", p15: "كاوتش كوري",
+        p16: "كاوتش نكسن", p17: "كاوتش كومهو", p18: "كاوتش تويو", p19: "كاوتش كونتيننتال", p20: "كاوتش يوكوهاما"
+      },
+      en: {
+        nav_home: "Home", nav_products: "Products", nav_contact: "Contact",
+        section_title: "Tire Types", btn_view_cart: "View Cart 🛒", add: "+ Add",
+        curr: "EGP", footer_rights: "© 2025 Tire Store - All Rights Reserved",
+        hi: "Hi", logout_btn: "Logout",
+        p1: "Summer Tire A1", p2: "Winter Tire B2", p3: "SUV Tire X1", p4: "All Seasons Tire", p5: "Off-Road Tire",
+        p6: "Michelin Tire", p7: "Pirelli Tire", p8: "Bridgestone Sport", p9: "Hankook Tire", p10: "Dunlop Tire",
+        p11: "Sport Tire", p12: "Cooper Tire", p13: "Goodyear Tire", p14: "Taiwan Tire", p15: "Korean Tire",
+        p16: "Nexen Tire", p17: "Kumho Tire", p18: "Toyo Tire", p19: "Continental Tire", p20: "Yokohama Tire"
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || 'ar';
+    let currentTheme = localStorage.getItem("theme") || 'light';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      localStorage.setItem("lang", currentLang);
+      updateUI();
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem("theme", currentTheme);
+      applyTheme();
+    }
+
+    function applyTheme() {
+      document.body.setAttribute('data-theme', currentTheme);
+      document.getElementById('themeBtn').textContent = currentTheme === 'light' ? '🌙' : '☀️';
+    }
+
+    function updateUI() {
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.getElementById('langBtn').textContent = currentLang === 'ar' ? 'EN' : 'AR';
+      
+      document.querySelectorAll('[data-key]').forEach(elem => {
+        const key = elem.getAttribute('data-key');
+        if(translations[currentLang][key]) elem.textContent = translations[currentLang][key];
+      });
+    }
+
+    function addToCart(name, price) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.push({ name, price, quantity: 1 });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(currentLang === 'ar' ? "تمت الإضافة!" : "Added!");
+    }
+
+    updateUI(); applyTheme();
+  </script>
+</body>
+</html>
